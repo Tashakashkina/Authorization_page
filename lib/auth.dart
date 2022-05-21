@@ -14,6 +14,7 @@ class Auth extends StatefulWidget {
 }
 
 class AuthState extends State<Auth> {
+  TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerUserName = TextEditingController();
   TextEditingController controllerPassword = TextEditingController();
   Future<bool> _signIn(String username, String password) async {
@@ -120,9 +121,11 @@ class AuthState extends State<Auth> {
                                 TextStyle(color: Colors.white, fontSize: 18)),
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
+                            var getEmail = controllerEmail.text;
                             var getUserName = controllerUserName.text;
                             var getPassword = controllerPassword.text;
-
+                            MySharedPreferences.instance
+                                .setStringValue("email", getEmail);
                             MySharedPreferences.instance
                                 .setStringValue("username", getUserName);
                             MySharedPreferences.instance
@@ -133,6 +136,11 @@ class AuthState extends State<Auth> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (_) => Profile()),
+                            );
+                          } else {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => Login()),
                             );
                           }
                         })),
@@ -178,11 +186,6 @@ class AuthState extends State<Auth> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (_) => Profile()),
-                            );
-                          } else if (value == false) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (_) => Login()),
                             );
                           }
                         });

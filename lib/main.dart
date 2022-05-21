@@ -36,6 +36,6 @@ class MyAppState extends State<MyApp> {
             textSelectionTheme: TextSelectionThemeData(
           cursorColor: Colors.black,
         )),
-        home: Profile());
+        home: Auth());
   }
 }

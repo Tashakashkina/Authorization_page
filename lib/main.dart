@@ -4,28 +4,14 @@ import 'package:week_132/auth.dart';
 import 'my_shared_preferences.dart';
 import 'login.dart';
 import 'profile.dart';
+import 'dart:async';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return MyAppState();
-  }
-}
-
-class MyAppState extends State<MyApp> {
-  bool isLoggedIn = false;
-
-  MyAppState() {
-    MySharedPreferences.instance
-        .getBooleanValue("loggedin")
-        .then((value) => setState(() {
-              isLoggedIn = value;
-            }));
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +22,6 @@ class MyAppState extends State<MyApp> {
             textSelectionTheme: TextSelectionThemeData(
           cursorColor: Colors.black,
         )),
-        home: Auth());
+        home: const Auth());
   }
 }

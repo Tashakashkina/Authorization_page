@@ -1,32 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'my_shared_preferences.dart';
 import 'profile.dart';
+import 'dart:async';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return LoginState();
-  }
+  _LoginState createState() => _LoginState();
 }
 
-class LoginState extends State<Login> {
+class _LoginState extends State<Login> {
   TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerUserName = TextEditingController();
   TextEditingController controllerPassword = TextEditingController();
+  dynamic localStoragePass = SharedPreferences.getInstance();
+  dynamic localStorageName = SharedPreferences.getInstance();
+
+  void saveName() async {
+    localStorageName = await SharedPreferences.getInstance();
+    await localStorageName.setString(
+        'username', controllerUserName.text.toString());
+    await localStorageName.setString(
+        'password', controllerPassword.text.toString());
+  }
+
+  void savePass() async {
+    localStoragePass = await SharedPreferences.getInstance();
+    await localStoragePass.setString(
+        'username', controllerUserName.text.toString());
+    await localStoragePass.setString(
+        'password', controllerPassword.text.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-
     return SafeArea(
       child: Scaffold(
-          body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.all(25),
-          child: Form(
-            key: formKey,
+        body: Center(
+          child: Container(
+            margin: EdgeInsets.all(25),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -42,11 +56,6 @@ class LoginState extends State<Login> {
                           hintText: "введите email",
                         ),
                         keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value!.trim().isEmpty) {
-                            return "Пожалуйста, введите еmail";
-                          }
-                        },
                       ),
                     )
                   ],
@@ -62,11 +71,6 @@ class LoginState extends State<Login> {
                           decoration: InputDecoration(
                             hintText: "введите логин",
                           ),
-                          validator: (value) {
-                            if (value!.trim().isEmpty) {
-                              return "Пожалуйста, введите логин";
-                            }
-                          },
                           controller: controllerUserName),
                     )
                   ],
@@ -84,7 +88,7 @@ class LoginState extends State<Login> {
                           ),
                           obscureText: true,
                           validator: (value) {
-                            if (value!.trim().isEmpty) {
+                            if (value!.isEmpty) {
                               return "Пожалуйста, введите пароль";
                             }
                           },
@@ -127,25 +131,9 @@ class LoginState extends State<Login> {
                     child: const Text("Отправить",
                         style: TextStyle(color: Colors.white, fontSize: 18)),
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        var getEmail = controllerEmail.text;
-                        var getUserName = controllerUserName.text;
-                        var getPassword = controllerPassword.text;
-
-                        MySharedPreferences.instance
-                            .setStringValue("email", getEmail);
-                        MySharedPreferences.instance
-                            .setStringValue("username", getUserName);
-                        MySharedPreferences.instance
-                            .setStringValue("password", getPassword);
-                        MySharedPreferences.instance
-                            .setBooleanValue("loggedin", true);
-
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (_) => Profile()),
-                        );
-                      }
+                      saveName();
+                      savePass();
+                      Navigator.pop(context);
                     },
                   ),
                 ),
@@ -153,7 +141,7 @@ class LoginState extends State<Login> {
             ),
           ),
         ),
-      )),
+      ),
     );
   }
 }

@@ -1,4 +1,4 @@
-# Использование пакета shared_preferences для страницы авторизации в приложении Flutter
+# shared_preferences для страницы авторизации в приложении Flutter
 
 A new Flutter project.
 
